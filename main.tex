@@ -1,0 +1,41 @@
+\documentclass[10pt,landscape, letter-paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning,arrows,fit,calc,graphs,graphs.standard}
+\usepackage[nosf]{kpfonts}
+\usepackage[t1]{sourcesanspro}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage[top=1cm,bottom=1cm,left=1cm,right=1cm]{geometry}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{microtype}
+\usepackage{pdfpages}
+\usepackage{lastpage}
+
+\include{style}
+
+% header
+% use '~' for word spacing
+\newcommand{\header}{
+\begin{mdframed}[style=header]
+\footnotesize
+\sffamily
+\LaTeX~Refsheet\\
+FirstName~LastName\hfill
+p.~\thepage~of~\pageref{LastPage}
+\end{mdframed}
+}
+
+\begin{document}
+% font size
+\small %\footnotesize
+
+% layout columns
+\begin{multicols*}{5}
+    % content goes here
+    %\input{content/example}
+    \input{content/fabrication}
+\end{multicols*}
+\end{document}

@@ -1,48 +1,66 @@
-\definecolor{myblue}{cmyk}{1,.72,0,.38}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MACROS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% text macros
+
+% math macros
+\let\bar\overline
+
+% tikz macros
 \def\firstcircle{(0,0) circle (1.5cm)}
 \def\secondcircle{(0:2cm) circle (1.5cm)}
 
-\colorlet{circle edge}{myblue}
-\colorlet{circle area}{myblue!5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% STYLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
-    outline/.style={draw=circle edge, thick}}
-    
-\pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
-
-\everymath\expandafter{\the\everymath \color{myblue}}
-\everydisplay\expandafter{\the\everydisplay \color{myblue}}
-
+% line spacing
 \renewcommand{\baselinestretch}{.8}
 \pagestyle{empty}
 
+% no indentation
+\makeatother
+\setlength{\parindent}{0pt}
+
+% highlight color
+\definecolor{highlight}{gray}{0.25} %{cmyk}{1,.72,0,.38}
+
+% header box style
 \global\mdfdefinestyle{header}{%
-linecolor=gray,linewidth=1pt,%
+linecolor=lightgray,linewidth=1pt,%
 leftmargin=0mm,rightmargin=0mm,skipbelow=0mm,skipabove=0mm,
 }
 
-\newcommand{\header}{
-\begin{mdframed}[style=header]
-\footnotesize
-\sffamily
-Hilfszettel zur Klausur\\
-von~Tim~S.,~Seite~\thepage~von~2
-\end{mdframed}
-}
-
-\makeatletter % Author: https://tex.stackexchange.com/questions/218587/how-to-set-one-header-for-each-page-using-multicols
+% section / subsection style
+\makeatletter
 \renewcommand{\section}{\@startsection{section}{1}{0mm}%
                                 {.2ex}%
                                 {.2ex}%x
-                                {\color{myblue}\sffamily\small\bfseries}}
+                                {\color{highlight}\sffamily\small\bfseries}}
 \renewcommand{\subsection}{\@startsection{subsection}{1}{0mm}%
                                 {.2ex}%
                                 {.2ex}%x
                                 {\sffamily\bfseries}}
 
+% math style
+\everymath\expandafter{\the\everymath \color{highlight}}
+\everydisplay\expandafter{\the\everydisplay \color{highlight}}
 
+% tikz layers
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+% tikz style
+\colorlet{circle edge}{highlight}
+\colorlet{circle area}{highlight!5}
+\tikzset{filled/.style={fill=circle area, draw=circle edge, thick},
+    outline/.style={draw=circle edge, thick}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Header inserted into first column on every page
+% Updated version from: https://tex.stackexchange.com/questions/654847/how-to-set-one-header-for-each-page-using-multicols-in-2022
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\multi@column@out{%
    \ifnum\outputpenalty <-\@M
@@ -55,20 +73,20 @@ von~Tim~S.,~Seite~\thepage~von~2
         \penalty-\@Mv\unvbox\@cclv}%
    \fi
    \splittopskip\topskip
-   \splitmaxdepth\maxdepth
+   \splitmaxdepth\@maxdepth
+   \boxmaxdepth\@maxdepth
    \dimen@\@colroom
    \divide\skip\footins\col@number
    \ifvoid\footins \else
       \leave@mult@footins
    \fi
-   \let\ifshr@kingsaved\ifshr@king
    \ifvbox \@kludgeins
      \advance \dimen@ -\ht\@kludgeins
      \ifdim \wd\@kludgeins>\z@
         \shr@nkingtrue
      \fi
    \fi
-   \process@cols\mult@gfirstbox{%
+   \process@cols\mult@firstbox{%
 %%%%% START CHANGE
 \ifnum\count@=\numexpr\mult@rightbox+2\relax
           \setbox\count@\vsplit\@cclv to \dimexpr \dimen@-1cm\relax
@@ -81,17 +99,15 @@ von~Tim~S.,~Seite~\thepage~von~2
             \setbox\count@
                  \vbox to\dimen@
                   {\unvbox\count@
-                   \remove@discardable@items
-                   \ifshr@nking\vfill\fi}%
+                   \ifshr@nking
+                    \vfilmaxdepth\fi}%
            }%
    \setbox\mult@rightbox
        \vsplit\@cclv to\dimen@
    \set@keptmarks
    \setbox\mult@rightbox\vbox to\dimen@
           {\unvbox\mult@rightbox
-           \remove@discardable@items
-           \ifshr@nking\vfill\fi}%
-   \let\ifshr@king\ifshr@kingsaved
+           \ifshr@nking\vfilmaxdepth\fi}%
    \ifvoid\@cclv \else
        \unvbox\@cclv
        \ifnum\outputpenalty=\@M
@@ -132,6 +148,7 @@ von~Tim~S.,~Seite~\thepage~von~2
         Produce bot mark:\MessageBreak
           \meaning\botmark
          \@gobbletwo}%
+   \boxmaxdepth\maxdimen
    \setbox\@cclv\vbox{\unvbox\partial@page
                       \page@sofar}%
    \@makecol\@outputpage
@@ -144,6 +161,7 @@ von~Tim~S.,~Seite~\thepage~von~2
          \@gobbletwo}%
    \global\@colroom\@colht
    \global \@mparbottom \z@
+   \global \@textfloatsheight \z@
    \process@deferreds
    \@whilesw\if@fcolmade\fi{\@outputpage
       \global\@colroom\@colht
@@ -155,6 +173,4 @@ von~Tim~S.,~Seite~\thepage~von~2
               = \the\@colroom \@gobble}%
     \set@mult@vsize \global
   \fi}
-
-\makeatother
-\setlength{\parindent}{0pt}
+  
