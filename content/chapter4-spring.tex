@@ -1,0 +1,44 @@
+\subsection*{Spring Motion Eqns}
+
+\textbf{Free Mech Vibrations ($F_{ext} = 0$)}:
+eqn of spring motion $my'' + by' + ky = 0$ where $m$ is mass, $b$ is damping, $k$ is spring const, $F_{ext}$ is external force.
+
+\textbf{Undamped ($b=0$)}:
+Form $my'' + ky = 0$. $w = \sqrt{\frac{k}{m}}$ is natural freq. General soln $y = c_1 \cos{wt} + c_2 \sin{wt}$. 
+Or $y = Asin(wt + \phi)$ where amplitude $A = \sqrt{c_1^2 + c_2^2}$, phase angle $\phi = \tan^{-1}(\frac{c_1}{c_2})$, and period $wt$. 
+How long after release does mass pass through equilibrium pos? Steps: 
+1. Find y(t) and y'(t). 2. Solve IVP. 3. Convert to $A, \phi$ form. 4. $t = (n \pi - \phi)/w$.
+
+\textbf{Underdamped ($b < 4mk$)}:
+Roots: $\alpha + i \beta$ where $\alpha = -b/2m$ and $\beta = (1/2m)\sqrt{4mk - b^2}$. 
+Gen Soln: $y = c_1 e^{\alpha t} cos(\beta t) + c_2 e^{\alpha t} sin(\beta t) = Ae^{\alpha t}sin(\beta t + \phi)$ when $A, \phi$, same as undamped. 
+Obs: y oscillates btwn $-Ae^{\alpha t}$ and $Ae^{\alpha t}$, with quasiperiod $2 \pi / \beta$ as $t \to \infty$, $Ae^{\alpha t} \to 0$ approach equilibrium. 
+
+\textbf{Overdamped ($b > 4mk$)}:
+Roots: $r_{1, 2} = \frac{-b}{2m} \pm \frac{1}{2m}\sqrt{b^2 - 4mk}$. 
+Gen Soln: $y = c_1 e^{r_1 t} + c_2 e^{r_2 t}$. 
+Obs: as $t \to \infty$, $y \to 0$ approach equilibrium. y(t) has 1 min/max or none (max at $t=0$). $y'=0$ iff $c_1r_1 + c_2r_2 exp(r_2-r_1) = 0$. 
+ 
+\textbf{Critically Damped ($b = 4mk$)}:
+Roots: $r_1 = r_2 = -b/2m$ 
+Gen Soln: $y = (c_1 + c_2t)exp(rt)$.
+Obs: Same as overdamped, but $y'=0$ iff $c_2 + c_1r + c_2r = 0$.
+
+\textbf{Forced Mech Vibrations ($F_{ext} = F_0 cos(\gamma t)$)}:
+Gen Soln: $y = y_p + Ae^{\alpha t}sin(\beta t + \phi)$ where $\alpha, \beta$ from underdamped homogenous is transient part ($\to 0$). 
+
+\textbf{Undamped}: 
+use cos/sin from methods of undetermined variables.
+
+\textbf{Underdamped}:
+use $y_p = Ae^{\alpha t}cos(\gamma t) + Be^{\alpha t}sin(\gamma t)$ that matches format of $F_{ext}$. 
+Then find $A = \frac{F_0 (k-m\gamma^2)}{(k-m\gamma^2)^2 + b^2\gamma^2}, B = \frac{F_0 b \gamma}{(k-m\gamma^2)^2 + b^2\gamma^2}$. 
+Or $y_p = (F_0/\sqrt{(k-m\gamma^2)^2 + b^2\gamma^2})sin(\gamma t + \theta), \theta = \tan^{-1}(\frac{k-m\gamma^2}{b\gamma})$ is steady-state solution 
+where period matches external sinusoidal force. \textbf{Frequency Gain/Factor}: $M(\gamma) = 1/\sqrt{(k-m\gamma^2)^2 + b^2\gamma^2}$. 
+\textbf{Freq-Response Curve}: $M(0) = 1/k$ bc $F_{ext} = F_0$ constant force. As $\gamma \to \infty$, $M(\gamma) \to 0$. Graphing: overdamped $\gamma = 0$, 
+underdamped $\gamma=0, \gamma_r = \sqrt{k/m - b^2/2m^2}$. \textbf{Resonance Freq} = $\gamma_r/2\pi$. 
+
+\textbf{Vertical Spring Mass System}: 
+If $F_{ext}=mg$, then $y_p = mg/k$. If $F_{ext}=mg + F_0cos(\gamma t)$ then solve for $F_{ext} = F_0cos(\gamma t)$ as above, $y_{actual} = y + mg/k$. 
+Note: $k = F/x, m = weight/g, g=32ft/s^2$.
+

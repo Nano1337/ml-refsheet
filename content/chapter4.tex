@@ -1,16 +1,44 @@
 \subsection*{Ch4: Linear 2nd Order Applications}
 
-\textbf{Homogenous 2nd-order const coeff}: 1. turn
-$ay'' + by' + cy = 0$ into $ar^2 + br + c = 0$ and solve for $r$. 
-2. $y = e^{rt}$ are solns. 3. $y = c_1e^{r_1t} + c_2e^{r_2t}$ is the general soln.
-4a. If $r_1 \neq r_2$, then $y = c_1e^{r_1t} + c_2e^{r_2t}$. 
-4b. If $r_1 = r_2$, then $y = c_1e^{r_1t} + c_2te^{r_2t}$.
+\textbf{Const coeff, Homogenous ($=0$)}:
+Form $ay'' + by' + cy = 0$ where $a,b,c \in \mathbb{R}$ and $a \neq 0$. Solve aux eqn $ar^2 + br + c = 0$ for $r_1, r_2$.
+General form: $y(t) = c_1 y_1 + c_2 y_2$, 
+Cases: 
+1. $r_1 \neq r_2 \in \mathbb{R}, y_i = e^{r_i t}$ 
+2. $r_1 = r_2 \in \mathbb{R}, y_1 = e^{rt}, y_2 = te^{rt}$ 
+3. $r \in \mathbb{I}, y_1 = e^{\alpha t}\cos{\beta t}, y_2 = e^{\alpha t}\sin{\beta t}$
 
-\textbf{Wronskian test for linear independence}: 
-$W[y_1, y_2] = \begin{vmatrix} y_1 & y_2 \\ y_1' & y_2' \end{vmatrix} \neq 0$. \\
+\textbf{Method of Undetermined Coeffs}:
+If $f(t) = Ct^m$ then guess $y = A_m t^m + \dots + A_1t + A_0$. 
+If $f(t) = Ce^{rt}$ then guess $y = Ae^{rt}$. 
+If $f(t) = C\{cos|sin\}(\beta t)$ then guess $y = Asin(\beta t) + Bcos(\beta t)$. 
+If form $ay'' + by' + cy = Ct^me^{rt}$ then guess $y = t^s(A_m + \dots + A_1t + A_0)e^{rt}$ 
+where $r \in \mathbb{I} \rightarrow s=0, r_1 \neq r_2 \in \mathbb{R} \rightarrow s=1, r_1 = r_2 \in \mathbb{R} \rightarrow s=2$.
+If form $ay'' + by' + cy = Ct^m\{cos|sin\}(\beta t)$ then guess $y = t^s(A_m t^m + \dots + A_1t + A_0)e^{at}\cos(\beta t)
++ t^s(B_m t^m + \dots + B_1t + B_0)e^{at}\sin(\beta t)$ where $s=1$ if $\alpha + i \beta$ from $f(t)$ is a root of the aux eqn else $s=0$. \textbf{solving}:
+1. Get $y_p$ guess with rules 2. find $y, y', y''$ and plug into original diffeq. Solve for coeffs by equating to f(t) then plug coeffs into $y_p$.
 
-\textbf{Homogenous Complex}: 
-1. Find $r = \alpha \pm i\beta$ from $ar^2 + br + c = 0$. 
-2. $y = e^{\alpha t}(c_1\cos{\beta t} + c_2\sin{\beta t})$ is the general soln.
+\textbf{Variation of Parameters}: 
+$y_p = v_1 y_1 + v_2 y_2 $, $v_1 = \int \frac{-f(t) y_2}{aW[y_1, y_2]} dt$ and $v_2 = \int \frac{f(t) y_1}{aW[y_1, y_2]} dt$. 
+Solve: 1. find $y_h$ with aux eqn to get $y_1, y_2$ 2. Find $W[y_1, y_2] = y_1 y_2' - y_2 y_1'$ 3. Find $v_1, v_2$ 4. Plug into $y_p$.
 
-\textbf{Mass-spring system}: $my'' + by' + ky = 0$ where $m$ is mass, $b$ is damping, $k$ is spring const.
+\textbf{Const coeff, Non-homogenous ($\neq 0$)}:
+Form $ay'' + by' + cy \neq 0$. General soln: $y = y_p + c_1 y_1 + c_2 y_2$ where $y_p$ is particular soln and $y_1, y_2$ are homogenous general soln. 
+To find $y_p$, use method of undetermined coeffs if $f(t)$ is a polynomial, exponential, or sin/cos function. Otherwise use variation of parameters to
+find homogenous general soln then compute v1, v2 to find $y_p$. Use superposition if $f(t)$ is a sum of functions so solve for each function then add.
+
+\textbf{Cauchy-Euler Form}: 
+$at^2y'' + bty' + cy = 0$ then 1. solve $ar^2 + (b-a)r + c = 0$ 2. Calc $y_1, y_2$ for general soln. 3. Show $W[y_1,y_2] \neq 0$ for $y_p$. 
+Cases: 1. $r_1 \neq r_2 \in \mathbb{R} \rightarrow y = t^r$ 
+2. $r_1 = r_2 \in \mathbb{R} \rightarrow y = t^r, t^r\ln{t}$ 
+3. $r \in \mathbb{I} \rightarrow y = t^{\alpha}\{cos|sin\}(\beta \ln{t})$
+
+\textbf{Reduction of Order given $y_1$}:
+Convert to std form $y'' + p(t)y' + q(t)y = 0$ then $y_2 = y_1 \int \frac{exp(-\int p(t) dt)}{y_1^2} dt$
+
+\textbf{Variable coeff, Homogenous ($=0$)}: 
+Form $a_2y'' + a_1 y' + a_0 y = 0$. No general method but can if Cauchy-Euler or Reduction of order given $y_1$. General form $y = c_1 y_1 + c_2 y_2$.
+
+\textbf{Variable coeff, Non-homogenous ($\neq 0$)}:
+Form $a_2y'' + a_1 y' + a_0 y = f(t)$. To find $y_p$, 1. find homogenous general soln. 2. put into std form 3. find $v_1, v_2$ using variation of params. General form $y = y_p + c_1 y_1 + c_2 y_2$.
+
