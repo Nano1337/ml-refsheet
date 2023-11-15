@@ -1,0 +1,70 @@
+\subsection*{Ch7: Laplace Transforms}
+
+\textbf{Definition}: $f(t) \in [0, \infty)$ has exponential order $\alpha$ if exists $T>0$ and $M>0$ such that $|f(t)| \leq Me^{\alpha t}$ for $t \geq T$.
+$F(s) = \mathcal{L}\{f(t)\} = \int_0^{\infty} e^{-st} f(t) dt$. 
+Laplace is linear operator. 
+
+\textbf{Laplace Transform Table}:\\
+\begin{tabular}{|c|c|c|}
+\hline
+$f(t)$ & $F(s)$ & $B$\\
+\hline
+$1$ & $\frac{1}{s}$ & $s>0$ \\
+$e^{at}$ & $\frac{1}{s-a}$ & $s>a$ \\
+$t^n$ & $\frac{n!}{s^{n+1}}=\frac{\Gamma(n+1)}{s^{n+1}}$ & $s>0$ \\
+$\sin{bt}$ & $\frac{b}{s^2 + b^2}$ & $s>0$\\
+$\cos{bt}$ & $\frac{s}{s^2 + b^2}$ & $s>0$\\
+$e^{at}t^n$ & $\frac{n!}{(s-a)^{n+1}}$ & $s>a$\\
+$e^{at}\sin{bt}$ & $\frac{b}{(s-a)^2 + b^2}$ & $s>a$\\
+$e^{at}\cos{bt}$ & $\frac{s-a}{(s-a)^2 + b^2}$ & $s>a$\\
+$e^{at}f(t)$ & $F(s-a)$ & $s>a$\\
+$t^nf(t)$ & $(-1)^nF^{(n)}(s)$ & $s>a$\\
+$y'(t)$ & $sY(s) - y(\cdot)$ & $s>a$\\
+$y''(t)$ & $s^2Y(s)-sy(\cdot) - y'(\cdot)$ & $s>a$\\
+$ty'(t)$ & $-Y(s) - sY'(s)$ & $s>a$\\
+\hline
+$u(t-a)$ & $\frac{e^{-as}}{s}$ & $s>0$\\
+$\Pi_{a,b}(t)$ & $\frac{e^{-as} - e^{-bs}}{s}$ & $s>0$\\
+$f(t-a)u(t-a)$ & $e^{-as}F(s)$ & $s>a$\\
+$g(t)u(t-a)$ & $e^{-as}\mathcal{L}\{g(t+a)\}$ & $s>a$\\
+$\delta(t-a)$ & $e^{-as}$ & $s>0$\\
+\hline
+\end{tabular}
+
+\textbf{Partial Fraction Decomp}: \textbf{Non-repeated factors (s-r)}: $f(s)/(s-r)(s-b) = A/(s-r) + B(s-b)$ 
+\textbf{Repeated Linear (s-r)$^n$}: $f(s)/(s-r)^n = A_1/(s-r) + \dots + A_n/(s-r)^n$. 
+\textbf{Irreducible Quadratic $s((s-\alpha)^2 + \beta^2)^m$} has no real root, repeated if m>1. 
+$\frac{f(s)}{((s-\alpha)^2 + \beta^2)^m} = \frac{A_m(s-\alpha) + \beta B_m}{[(s-\alpha)^2 + \beta^2]^m}$
+
+\textbf{General Laplace Solving}: 1. Take Laplace of both sides. 2. Solve for $Y(s)$. 3. Find $y(t)$ by taking inverse Laplace of $Y(s)$.
+
+\textbf{Variable coeff Laplace}: see $\mathcal{L}{ty'(t)}$ in table. 1. Take Laplace of both sides with special prop 2. Solve for $Y'(s)$ with integrating factor
+3. Get rid of +C term 4. Inverse Laplace for y(t). 
+
+\subsection*{Ch7.6: Periodic Stuff}
+\textbf{Unit Step Fxn}: Mu(t-a) = 0 if $t<a$, M if $t>a$. Steps M units up at x=a. 
+\textbf{Window Fxn}: $\Pi_{a,b}(t) = u(t-a) - u(t-b)$. Creates line segment from (a, b) and 0 elsewhere.
+\textbf{Current I in LC circuit IVP}: Steps: 1. convert $g(t)$ to step and window fxns $\rightarrow$ reduce to $u(t-a)$ terms. 
+2. Take $\mathcal{L}\{\cdot \}$ of both sides 3. Before dividing $[c]$ from $[c]Y(s)$, factor out $e^{-as}$ from $Y(s)$ to leave $F(s)$. 
+4. Find $f(t)$ from $F(s)$ and use that for $y(t) = \mathcal{L}^{-1}\{g(t)F(s)\}$ to get in terms of $f(t-a)u(t-a)$. 
+\textbf{$f(t)$ of Period T}: $f_T(t + T) = f_T(t)$ where T is the period, e.g. $T = 2\pi$ for cos/sin. $f_T(t) = f(t)\Pi_{0, T}(t)$ windowed version of t. 
+Steps to finding $f(s)$ from graph: 1. Find period T. 2. Find $f_T(t)$ from $f(t)$ by windowing. 3. Find $F_T(s)$ from $f_T(t)$ by taking Laplace. 
+4. $F(s) = F_T(s)/(1-e^{-Ts})$. 5. Find $f(t) = \mathcal{L}^{-1}\{F(s)\}$ 
+
+\textbf{Gamma Fxn Props}: $\Gamma(t) = \int_0^{\infty}e^{-u}u^{t-1}du, t>0$. Other props: $\Gamma(t+1) = t\Gamma(t)$, $\Gamma(1) = 1$, 
+$\Gamma(1/2) = \sqrt{\pi}$, $\Gamma(n+1) = n!$. 
+
+\subsection*{Ch7.8: Convolution}
+
+$(f*g)(t) = \int_0^t f(t-v)g(v)dv$. \textbf{Props}: $f*g = g*f$, $f*(g*h) = (f*g)*h$, $f*(g+h) = f*g + f*h$, $f*0 = 0$, Note $f*1 \neq f$ in general. 
+\textbf{Laplace Convolution Thm}: $\mathcal{L}\{f*g\} = F(s)G(s)$. \textbf{Convolution Thm}: $\mathcal{L}^{-1}\{F(s)G(s)\} = f*g$. 
+\textbf{Laplacian Products}: Given $F(s)G(s)$, use inverse Laplace to find $f(t), g(t)$ then convolve $f*g$.
+\\
+\textbf{Integro-Diff Eqn}: 1. Given $y'(t) = 1-\int_0^ty(t-v)f(v)dv$, 2. write as conv $y'(t)=1-y(t)*f(t)$. 3. Take Laplace of both sides. 4. Rearr for $Y(s)$.
+5. Solve with partial frac 6. Inverse Laplace to get $y(t)$.
+
+\textbf{Transfer/Impulse-Response Fxn}: 1. Transfer fxn $H(s) = 1/(as^2+bs+c)$ 2. Impulse-response fxn $h(t) = \mathcal{L}^{-1}\{H(s)\}$.
+3. $y(t) = h(t)*g(t) + y_k(t)$ 4. $y_k(t)$ is the solution to homogenous IVP.
+
+\textbf{Dirac Delta Fxn}: $\delta(t-a) = \int_{-\infty}^{\infty} f(t)\delta(t-a)dt = f(a)$. 
+\textbf{Hammer on mass-spring system}: $g(t) = \delta(t-a)$ where $a$ is the time of the hammer strike.
