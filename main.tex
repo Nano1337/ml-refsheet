@@ -7,12 +7,13 @@
 \usepackage[t1]{sourcesanspro}
 \usepackage{multicol}
 \usepackage{wrapfig}
-\usepackage[top=1cm,bottom=1cm,left=1cm,right=1cm]{geometry}
+\usepackage[top=1cm,bottom=1cm,left=0.5cm,right=0.5cm]{geometry}
 \usepackage[framemethod=tikz]{mdframed}
 \usepackage{microtype}
 \usepackage{pdfpages}
 \usepackage{lastpage}
-
+\usepackage{amssymb}
+\usepackage{amsmath}
 \include{style}
 
 % header
@@ -29,12 +30,13 @@ p.~\thepage~of~\pageref{LastPage}
 
 \begin{document}
 % font size
-\small %\footnotesize
+%\small 
+\footnotesize
 
 % layout columns
 \begin{multicols*}{4}
     % content goes here
-    \input{content/trigcalc.tex}
+    \input{content/autoencoders.tex}
     % \input{content/chapter1.tex}
     % \input{content/chapter2.tex}
     % \input{content/chapter3.tex}

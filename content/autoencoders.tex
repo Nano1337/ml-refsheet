@@ -1,0 +1,74 @@
+
+
+\subsection*{Autoencoders}
+\textbf{Comparison to PCA}: Autoencoders have an encodec scheme where  encoder -> lower latent, decoder -> recon input. 
+Like PCA where lower dim projection (principal coordinates) by using eigenvectors to capture the directions of most variance, recon the original input through a linear combo of the principal coordinates and their respective principal coordinates.
+Deep Autoencoders = pseudo-invertible nonlinear dimensionality reduction 
+
+\textbf{What distribution should the latent follow?}
+We can enforce a prior distribution by adding a probabilistic distance error (e.g. KLD or JSD). 
+\textbf{Kullback-Leibler (KL) Divergence}:
+$D_{KL}(p||q) = \mathbb{E}_{x}\left[\log \frac{p(x)}{q(x)}\right]$
+But this is not defined in non-overlapping support, i.e. when q(x) = 0
+Not symmetric. The Jensen-Shannon (JSD) Divergence fixes this by essentially repeating the KL divergence twice to make it symmetric. Formula: 
+$D_{JSD}(p||q) = \mathbb{E}_{x}\left[-\log \frac{p(x)}{q(x)}\right] + \mathbb{E}_{x}\left[-\log \frac{q(x)}{p(x)}\right]$
+How do we calculate a Divergence metric when we don't have access to the data distribution? We're are only given access to a batch of samples at training time. 
+
+\subsection*{Adversarial Networks}
+One way we can enforce the latent distribution to follow the prior distribution is through adversarial networks by using a discriminator (adversary) to judge whether a generated output is real or fake. This training method actually allows us to provably measure JSD at an individual sample level. 
+
+Loss: $\min_{\theta_g,\theta_\phi} \max_{\eta} \mathbb{E}_{x\sim p_X}[\|x - \phi(\theta(x))\|^2] + \lambda \log(1 - \eta(\phi(x))) + \mathbb{E}_{z\sim q_z}[\log(\eta(z))]$ where first term is MSE and other terms are JSD. 
+
+Proof deriving JSD:
+
+$\int_{z} q_z(z) \log(\eta(z)) dz + \int_{z} p_z(z) \log(1 - \eta(z)) dz \overset{\text{L}}{\Longrightarrow} \frac{\partial L}{\partial \eta} = \frac{q_z(z)}{\eta(z)} - \frac{p_z(z)}{1 - \eta(z)} dz = 0 \Rightarrow \eta^* = \frac{q_z}{q_z + p_z}, 
+\int_{z} q_z(z) \log\left(\frac{q_z}{q_z + p_z}\right) dz + \int_{z} p_z(z) \log\left(1 - \frac{q_z}{q_z + p_z}\right) dz = \int_{z} q_z(z) \log\left(\frac{q_z}{q_z + p_z}\right) dz + \int_{z} p_z(z) \log\left(\frac{p_z}{q_z + p_z}\right) dz = 
+\int_{z} q_z(z) \log\left(\frac{q_z}{q_z + p_z}\right) dz + \int_{z} p_z(z) \log\left(\frac{p_z}{q_z + p_z}\right) dz - 2\log(2)= 2 JS(q_z, p_z) - 2\log(2)$
+Extra term $-2\log(2)$ acts as a lower bound on the loss if p(z) = q(z) so if discriminator gives p = 0.5, meaning that $\eta(z) = 0.5$ from the initial distance formula, then we get $-\log(2) + -\log(2) = -2\log(2)$. 
+
+
+\textbf{Mode Collapse}: However, we may get mode collapse when the generator starts producing a limited variety of outputs, failing to capture the full diversity of the target distribution. 
+
+\textbf{Wasserstein GAN}
+Also known as Earth Mover's distance. Quantifies the amount of "work" moving a probability distribution to another. This better quantifies probabilistic distance than other metric, but I won't get into the details here. 
+For the dual formulation for 1-Wasserstein distance:
+$W_1(p, q) = \max_{\|\eta\|_L \leq 1} \left( \int_X \eta(x)p(x)dx - \int_Y \eta(y)q(y)dy \right)$
+
+$\quad X, Y \subseteq \mathbb{R}^d$
+For the Wasserstein Adversarial Networks:
+$
+D(p_z, q_z) = \max_{\|\eta\|_L \leq 1} \mathbb{E}_{z\sim q_z}[\ln(\eta(z))] - \mathbb{E}_{z'\sim p_z}[\ln(\eta(z'))]
+$
+For the Loss function:
+$
+\min_{\theta_g,\theta_\phi} \max_{\|\eta\|_L \leq 1} \mathbb{E}_{x\sim p_X}[\|x - \psi(\phi(x))\|^2] + \lambda \left( 2\eta(\phi(x)) - \mathbb{E}_{z\sim q_z}[\ln(\eta(z))] \right)
+$
+
+\subsection*{Variational Autoencoders}
+The prior $p(z)$ here is a simple Gaussian, which is mathematically convenient to work with, while the conditional output $p(x|z)$ is complex (image generated). Thus, we would ideally use MLE to estimate the parameters: 
+$p_{\theta}(x) = \int p_{\theta}(x)p_{\theta}(x|z)dz$
+However, marginalizing across all $z$ is simply not practically possible, which makes this MLE intractable. Thus, the posterior density $p_{\theta}(z|x)$ is also intractable. 
+
+\textbf{Solution}: we also need to estimate an encoder $q_{\phi}(z|x)$ model. We can derive the loss terms based on the Evidence-based Lower Bound (ELBO) that we want to maximize: 
+$\log p_{\theta}(x^{(i)})$ = $\mathbb{E}_{z \sim q_{\phi}(z|x^{(i)})}\left[\log p_{\theta}(x^{(i)})\right]$ (Does not depend on \( z \))
+= $\mathbb{E}_{z}\left[\log \frac{p_{\theta}(x^{(i)})}{p_{\theta}(z)} p_{\theta}(z | x^{(i)})\right]$ (Bayes' Rule)
+= $\mathbb{E}_{z}\left[\log p_{\theta}(x^{(i)} | z) p_{\theta}(z) \frac{q_{\phi}(z | x^{(i)})}{q_{\phi}(z | x^{(i)})}\right]$ (Multiply by constant)
+= $\mathbb{E}_{z}\left[\log p_{\theta}(x^{(i)} | z)\right]$ - $\mathbb{E}_{z}\left[\log \frac{q_{\phi}(z | x^{(i)})}{p_{\theta}(z | x^{(i)})}\right]$ + $\mathbb{E}_{z}\left[\log \frac{q_{\phi}(z | x^{(i)})}{p_{\theta}(z | x^{(i)})}\right]$ (Logarithms)
+= $\mathbb{E}_{z}\left[\log p_{\theta}(x^{(i)} | z)\right]$ - $D_{KL}\left(q_{\phi}(z | x^{(i)}) \| p_{\theta}(z)\right)$ + positive KL term (intractable, ignore). The first 2 terms are the ELBO, term 1 is decoder distribution estimated through sampling w/ reparam trick (MSE), 
+2nd term is KLD loss.  
+
+
+
+The first term is the reconstruction loss and the second term is to make the approximate posterior close to the Gaussian prior. 
+
+
+\textbf{Reparam Trick}: 
+To take a forward pass through the VAE, we have to sample from the latent distribution (Gaussian in this case). However, we can't backprop through such a stochastic operation, so the reparameterization trick is used. Since we estimate $\mu$ and $\sigma$ through the encoder model, instead of drawing z from $N(\mu, \sigma^{2})$ , we can instead draw $\epsilon$ from N(0, 1) and then get z = $\mu$ + $\sigma * \epsilon$, and thus gradient calculation isn't affected. 
+
+\textbf{Generating Data}: Once the VAE trained, sample data from Gaussian as the latent z and use the decoder model for output image. Since z is a multivariate Gaussian, the diagonal prior on z are independent latent variables that cause different factors of variation (think principal comp in PCA). 
+    
+\textbf{Denoising Autoencoders}:
+It seems that $\psi(\phi(x)) - x$ would give us a vector that projects data from outside the manifold onto the manifold: 
+Through the Bengio paper "What Regularized Auto-Encoders Learn from the Data-Generating Distribution", they find that: 
+$\nabla_{x}\log(p(x)) = -\nabla E(x)$ In other words, the score function is the gradient of the log probability of the data! If we have the score function, we can sample from the distribution by setting an initial x drawn from an arbitrary prior distribution and then following the gradient of the data to eventually converge at a sample from p(x). This is called Langevin Dynamics: 
+$x_{i+1} \leftarrow x_{i}+ \epsilon \nabla \log p(x) + \sqrt{2\epsilon} \text{ }z_{i}, \text{ } i \in 0 \dots K $ where the "learning rate" $\epsilon$ is sufficiently small and number of steps K is sufficiently large. 
