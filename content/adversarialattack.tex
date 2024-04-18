@@ -61,3 +61,22 @@ self-explanatory. Only modify one pixel
 manipulating the training data itself rather than during inference
 Maintain accuracy but hamper generalization due to outliers through poisoning
 
+\subsection*{Adversarial Training}
+Do training with adversarial samples
+\textbf{Outer Minimization}:
+$min_{\theta}\sum\limits_{x, y \in S} max_{\delta \in \Delta} Loss(x + \delta, y; \theta)$
+We can do gradient descent, but how do we find the gradient of the inner maximization term? 
+
+\textbf{Danskin's Theorem}: 
+A fundamental result from optimization is: 
+$\nabla_{\theta}max_{\delta \in \Delta} Loss(x + \delta, y; \theta) = \nabla_{\theta}Loss(x = \delta^{*}, y; \theta)$
+where
+$\delta^{*}=max_{\delta \in \Delta} Loss(x + \delta, y; \theta)$
+which means we can optimize through the max by finding its maximum value, but this only applies when max is found exactly. 
+
+\textbf{Steps}: 
+1. Select mini-batch B
+2. For each sample, calculate the corresponding adversarial sample 
+3. Update parameters where learning rate is divided by batch size
+It's also common to mix adversarial samples and normal samples for stability reasons
+
