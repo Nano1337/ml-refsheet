@@ -1,0 +1,40 @@
+\subsection*{Error Analysis}
+\textbf{Notation}:
+$F_{\delta}$ is feasible function space
+$F$ is all possible function space
+$\hat f \in F_\delta$ is one function from feasible function space
+
+\textbf{Population Error}: 
+Considers all of function space. Formulated as: 
+$R(\hat f) - \inf_{f \in F}R(f)$
+first term: expected/true risk, represents average error of $\hat f$ on ALL possible inputs (not possible, theoretical measure), 2nd term $\inf_{f \in F} R(f) = f^{*}$ is the lowest possible true risk over all of F (tight lower bound). This is the optimal function that can ever be learned
+
+Population Error decomposition: 
+$ R(\hat f) - \inf_{f \in \mathcal{F}} R(f) $
+=$\left(\ R(\hat f) - \inf_{f \in \mathcal{F}_{\delta}} R(f) \right) + \left( \inf_{f \in \mathcal{F}_{\delta}} R(f) - \inf_{f \in \mathcal{F}} R(f) \right) $
+
+=$\left(\hat R(\hat f) - \inf_{f \in \mathcal{F}_{\delta}}\hat R(f) \right) + \left( R(\hat f) - \hat{R}(\hat f) \right) + \left( \inf_{f \in \mathcal{F}_{\delta}}\hat R(f) - \inf_{f \in \mathcal{F}s} {R}(f) \right) + \epsilon_{appr} $
+$ \leq \epsilon_{opt} + 2\sup_{f \in \mathcal{F}_{\delta}} \left| R(f) - \hat{R}(f) \right| + \epsilon_{appr} $
+=$\epsilon_{opt} + \epsilon_{stat} + \epsilon_{appr} $
+\textbf{Statistical Error}: 
+Defined as $\sup_{f \in F_{\delta}} |R(f) - \hat R(f)| \leq constant*\frac{complexity}{n^\frac{1}{d}}$ 
+Only involves $F_\delta$ space and the same function in both risk terms.
+tight upper bound difference between true and empirical risk.
+Basically, how well does this feasible function operate across all theoretical inputs vs the train set inputs.
+Empirical risk depends on n, so increasing n would decrease statistical error.
+Complexity results from increasing data dimensionality, which would increase statistical error.
+Analogous to variance. 
+\textbf{Optimization Error}: 
+Defined as $\hat R (\hat f) - \inf_{f \in F_{\delta}} \hat R(f)$
+Only deals with empirical risk since optimization is only possible with existing data.
+Measures how close a feasible function is to the optimal feasible function.
+Error can be decreased with better optimizer.
+\textbf{Approximation Error}: 
+Defined as  $\inf_{f \in F_{\delta}} R(f) - \inf_{f \in F} R(f)$
+Only deals with true error 
+Measures how close optimal feasible function is with optimal possible function
+Error can be decreased by increasing complexity since that allows $F_{\delta}$ to have a greater chance of containing the optimal possible function
+Analogous to bias.
+\textbf{Double Descent}: 
+First half is the Bias-Variance trade-off you see in traditional ML.
+The second descent happens because once approximation error is fully minimized (overparameterized model finds global minimum basin), the model finds simpler solution so model complexity goes down and thus statistical error also goes down. This could be the explanation for the lottery ticket hypothesis that represent the "simpler" solutions.
